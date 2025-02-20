@@ -267,7 +267,8 @@ bool LoaderMgr::term()
     auto loader = _activeLoaders.head;
 
     //clean up the remained font loaders which is globally used.
-    while (loader && loader->type == FileType::Ttf) {
+    while (loader) {
+        if (loader->type != FileType::Ttf) continue;
         auto ret = loader->close();
         auto tmp = loader;
         loader = loader->next;
