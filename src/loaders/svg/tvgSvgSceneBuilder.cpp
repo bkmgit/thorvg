@@ -813,9 +813,11 @@ static unique_ptr<Text> _textBuildHelper(SvgLoaderData& loaderData, const SvgNod
     text->transform(textTransform);
 
     //TODO: handle def values of font and size as used in a system?
-    const float ptPerPx = 0.75f; //1 pt = 1/72; 1 in = 96 px; -> 72/96 = 0.75
-    auto fontSizePt = textNode->fontSize * ptPerPx;
-    if (textNode->fontFamily) text->font(textNode->fontFamily, fontSizePt);
+    auto size = textNode->fontSize * 0.75f; //1 pt = 1/72; 1 in = 96 px; -> 72/96 = 0.75
+    if (text->font(textNode->fontFamily, size) != Result::Success) {
+        //fallback to any available font
+        text->font(nullptr, size);
+    }
     text->text(textNode->text);
 
     _applyTextFill(node->style, text.get(), vBox);
