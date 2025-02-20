@@ -364,6 +364,21 @@ LoadModule* LoaderMgr::loader(const char* key)
 }
 
 
+LoadModule* LoaderMgr::anyfont()
+{
+    auto loader = _activeLoaders.head;
+
+    while (loader) {
+        if ((loader->type == FileType::Ttf) && loader->pathcache) {
+            ++loader->sharing;
+            return loader;
+        }
+        loader = loader->next;
+    }
+    return nullptr;
+}
+
+
 LoadModule* LoaderMgr::loader(const char* data, uint32_t size, const string& mimeType, bool copy)
 {
     //Note that users could use the same data pointer with the different content.
